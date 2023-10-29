@@ -3,5 +3,7 @@
 2. Manually copy over code you've made into relevant spots
 3. Commit & push:
 git add .
+
 git commit -m "MESSAGE"
+
 git push origin main

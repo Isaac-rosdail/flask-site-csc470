@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}
+Tutorial
+{% endblock %}
+{% block content %}
+<p>Probably a place for user sign in.</p>
+<form action="/action_page.php">
+    <label for="user">User name:</label><br>
+    <input type="text" id="user" name="user" value=""><br>
+    <label for="pass">Password:</label><br>
+    <input type="text" id="pass" name="pass" value=""><br><br>
+    <input type="submit" value="Submit">
+  </form> 
+{% endblock %}

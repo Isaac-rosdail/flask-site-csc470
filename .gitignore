@@ -20,3 +20,5 @@ node_modules/
 package-lock.json
 .pytest_cache/
 .coverage
+app/instance/
+*.sqlite3

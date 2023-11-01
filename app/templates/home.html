@@ -5,21 +5,29 @@ Tutorial
 {% block content %}
 <p>Probably a place for user sign in.</p>
 <h2>Sign In:</h2>
-<form action="" method="post">
+<form action="{{ url_for('home') }}" method="post">
     <p>
-
+        {{ form.username.label }} <br>
+        {{ form.username(size=30) }}
+    </p>
+    <p>
+        {{ form.password.label }} <br>
+        {{ form.password(size=30) }}
+    </p>
+    <p>
+        {{ form.submit() }}
     </p>
 </form>
 
 
-
+<!--
 <form action="/action_page.php">
     <label for="user">User name:</label><br>
     <input type="text" id="user" name="user" value=""><br>
     <label for="pass">Password:</label><br>
     <input type="text" id="pass" name="pass" value=""><br><br>
     <input type="submit" value="Submit">
-  </form>
+  </form> -->
 <div class="body-content">Don't have an account? Sign up here: </div>
 <button onclick="location.href='/signup'">Create Account</button>
 {% endblock %}

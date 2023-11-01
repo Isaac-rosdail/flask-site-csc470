@@ -42,7 +42,7 @@ def home():
             return redirect(url_for('dashboard')) # Redirect to user dashboard
         else:
             error = "No success."
-    return render_template("home.html", error=error)
+    return render_template("home.html", error=error, form=form)
 @app.route("/tickets/")
 def tickets():
     return render_template("tickets.html")

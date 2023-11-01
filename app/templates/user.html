@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<table>
+    {% for key,value in result.items() %}
+    <tr>
+        <th>
+            {{key}}
+        </th>
+        <td>
+            {{value}}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<ul>
+    {% for user in users %}
+    <li>{{ user.username }} - {{ user.email }}</li>
+    {% endfor %}
+</ul>
+<img src="{{ url_for('static', filename='images/great_success.jpg') }}" alt="High five!">
+{% endblock %}

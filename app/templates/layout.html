@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>{% block title %}Ticket System{% endblock %}</title>
@@ -21,6 +21,7 @@
             <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
             <a href="{{ url_for('tickets') }}" class="navbar-item">Tickets</a>
             <a href="{{ url_for('submit_ticket') }}" class="navbar-item">Request</a>
+            <button id="dark-mode-toggle" aria-label="toggle dark mode" class="text-right">Toggle Dark Mode</button>
         </div>
 
         <div class="body-content">
@@ -28,8 +29,10 @@
             {% endblock %}
             <hr/>
             <footer>
-                <p>&copy; 2023</p>
+                <p>Team Corn, LLC. &copy; 2023</p>
             </footer>
         </div>
+
+    <script src="{{ url_for('static', filename='js/darkmode.js') }}"> </script>
     </body>
 </html>

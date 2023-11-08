@@ -10,13 +10,17 @@ role TEXT NOT NULL CHECK (role IN ('admin', 'user', 'tech'))
 
 CREATE TABLE Tickets(
 ticket_id INTEGER PRIMARY KEY AUTOINCREMENT,
+created_by INTEGER NOT NULL,
 title TEXT NOT NULL,
 description TEXT NOT NULL,
 created_at DATETIME NOT NULL,
 updated_at DATETIME NOT NULL,
 status TEXT NOT NULL CHECK (status IN ('open', 'closed with no solution', 'in-progress', 'complete')),
+priority TEXT NOT NULL CHECK(priority IN('low', 'medium', 'high'))
 assigned_to INTEGER NOT NULL,
 FOREIGN KEY(assigned_to)
+REFERENCES Users(user_id)
+FOREIGN KEY(created_by)
 REFERENCES Users(user_id));
 
 CREATE TABLE Comments(

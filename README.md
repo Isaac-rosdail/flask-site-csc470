@@ -1,9 +1,11 @@
+Overview
+This project focuses on creating a ticketing system for users to create tickets which staff can
+then sort, manage, and procrastinate the work they should be doing.
 
-1. Clone Repo using: git clone https://github.com/Ennead9/teamcorn-csc470.git
-2. Manually copy over code you've made into relevant spots
-3. Commit & push:
-git add .
+Technologies Used:
+-Frontend: HTML/CSS/JS
+-Backend/Logic: Flask (Python)
+-Database: SQLite3
 
-git commit -m "MESSAGE"
-
-git push origin main
+Color Scheme:
+Maroon/White/Black

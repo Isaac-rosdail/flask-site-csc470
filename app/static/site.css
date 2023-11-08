@@ -30,3 +30,9 @@
     padding: 5px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: black;
+    color: white;
+}

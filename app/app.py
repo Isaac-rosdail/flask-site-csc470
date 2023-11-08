@@ -20,6 +20,7 @@ class User(db.Model):
     email = db.Column(db.String(30), unique=True) # email must be unique
     password = db.Column(db.String(30))
 
+# Diff credential levels, button on forms for selecting department
 
 # Init db & tables if needed
 with app.app_context():

@@ -1,4 +1,4 @@
-__pycache__/
+app/__pycache__/
 *.pyc
 *.pyo
 *.egg-info
@@ -22,3 +22,4 @@ package-lock.json
 .coverage
 app/instance/
 *.sqlite3
+instance/

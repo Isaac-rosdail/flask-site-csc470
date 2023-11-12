@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError  # Throw error
-from forms import LoginForm, SignupForm # import signup/login forms defined in forms.py
+from forms import LoginForm, SignupForm  # import signup/login forms defined in forms.py
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -21,6 +21,7 @@ class User(db.Model):
     password = db.Column(db.String(30))
 
 # Diff credential levels, button on forms for selecting department
+
 
 # Init db & tables if needed
 with app.app_context():

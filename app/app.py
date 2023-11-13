@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError  # Throw error
 from forms import LoginForm, SignupForm # import signup/login forms defined in forms.py
+from flask_login import current_user, login_required
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -14,11 +15,28 @@ db = SQLAlchemy(app)
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     # name = db.Column(db.String(30), unique=True)
     username = db.Column(db.String(30), unique=True)
     email = db.Column(db.String(30), unique=True) # email must be unique
     password = db.Column(db.String(30))
+    role = db.Column(db.Integer)
+    dept = db.Column(db.String(30))
+
+
+class Ticket(db.Model):
+    ticket_id = db.Column(db.Integer, primary_key=True)
+    created_by = db.Column(db.Integer) # get dept from finding user based on their user_id?
+    title = db.Column(db.String(30))
+    description = db.Column(db.String(100))
+    location = db.Column(db.String(30))
+    attachment = db.Column(db.String(30))
+
+
+## GRANT SELECT ONLY, row level security?
+## Grant, select,
+# SELECT - view it,
+# Adding Tickets Table
 
 # Diff credential levels, button on forms for selecting department
 
@@ -73,6 +91,12 @@ def signup():
             db.session.rollback()
             return render_template('signup.html', form=form)
     return render_template('signup.html', form=form)
+
+@app.route('/profile')
+def profile():
+    user_name = current_user.name
+
+    return render_template('profile.html', name=user_name)
 
 if __name__ == '__main__':
     app.run()

@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Hello there!</h2>
+<body>
+    <h1>Welcome, {{ name }}!</h1>
+</body>
+<img src="{{ url_for('static', filename='images/great_success.jpg') }}" alt="High five!">
+{% endblock %}

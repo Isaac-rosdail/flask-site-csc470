@@ -19,6 +19,18 @@ Sign Up
         {{form.password.label}} <br>
         {{form.password(size=30)}}
     </p>
+    <p>
+        {{form.role.label}} <br>
+        {% for option in form.role %}
+            {{ option }} {{ option.label }}
+        {% endfor %}
+    </p>
+    <p>
+        {{form.dept.label}} <br>
+        {% for option in form.dept %}
+            {{ option }} {{ option.label }}
+        {% endfor %}
+    </p>
     <p>{{form.submit}}</p>
 </form>
 

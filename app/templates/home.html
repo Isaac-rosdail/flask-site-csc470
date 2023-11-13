@@ -5,7 +5,7 @@ Tutorial
 {% block content %}
 <p>Probably a place for user sign in.</p>
 <h2>Sign In:</h2>
-<form action="{{ url_for('home') }}" method="post">
+<form action="{{ url_for('home')}}" method="post">
     <p>
         {{ form.username.label }} <br>
         {{ form.username(size=30) }}
@@ -28,6 +28,6 @@ Tutorial
     <input type="text" id="pass" name="pass" value=""><br><br>
     <input type="submit" value="Submit">
   </form> -->
-<div class="body-content">Don't have an account? Sign up here: </div>
-<button onclick="location.href='/signup'">Create Account</button>
+<div class="body-content">Don't have an account? Register here: </div>
+<button onclick="location.href='{{ url_for('register') }}'">Register</button>
 {% endblock %}

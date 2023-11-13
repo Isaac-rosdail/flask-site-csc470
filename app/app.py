@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
-from sqlalchemy.exc import IntegrityError  # Throw error
-from forms import LoginForm, SignupForm # import signup/login forms defined in forms.py
-from flask_login import current_user, login_required
+from forms import RegisterForm, LoginForm  # Import register/login forms
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
@@ -11,9 +10,16 @@ app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
 
 db = SQLAlchemy(app)
 
-# app.app_context().push() # needed to fix weird glitch, idk
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
+# Define models (User, Ticket)
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     # name = db.Column(db.String(30), unique=True)
@@ -33,13 +39,7 @@ class Ticket(db.Model):
     attachment = db.Column(db.String(30))
 
 
-## GRANT SELECT ONLY, row level security?
-## Grant, select,
-# SELECT - view it,
-# Adding Tickets Table
-
-# Diff credential levels, button on forms for selecting department
-
+## GRANT SELECT ONLY, row level security? # Grant, select, # SELECT - view it, # Adding Tickets Table
 # Init db & tables if needed
 with app.app_context():
     db.create_all()
@@ -48,55 +48,43 @@ with app.app_context():
 @app.route("/api/data")
 def get_data():
     return app.send_static_file("data.json")
-@app.route("/", methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    error = None
     form = LoginForm()
     if form.validate_on_submit():
-        # Verify login info
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.check_password(password):
-            return redirect(url_for('dashboard')) # Redirect to user dashboard
-        else:
-            error = "No success."
-    return render_template("home.html", error=error, form=form)
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.check_password(password=form.password.data):
+            login_user(user)
+            return redirect(url_for('dashboard.html')) # Changed redirect to profile page
+    return render_template("home.html", form=form)
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('/login'))
 @app.route("/tickets/")
 def tickets():
     return render_template("tickets.html")
 @app.route("/submit_ticket/")
 def submit_ticket():
     return render_template("submit_ticket.html")
-@app.route("/signup", methods=['GET', 'POST'])
-def signup():
-    form = SignupForm()
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
 
     # Validation & Saving to db
-    if form.is_submitted():
-        try:
-            result = request.form  # this line gives us access to the form data :P
+    if form.validate_on_submit():
+        # Store stuff from form into database User entry
+        new_user = User(username=form.username.data, password=form.password.data, email=form.email.data)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
 
-            # Store stuff from form into database User entry
-            new_user = User(username=form.username.data,
-                            email=form.email.data,
-                            password=form.password.data)
-            db.session.add(new_user)
-            db.session.commit()
-
-            users = User.query.all()
-            return render_template('user.html', users=users, result=result)
-        # If repeat username, don't accept. Add input validation?
-        except IntegrityError:
-            db.session.rollback()
-            return render_template('signup.html', form=form)
-    return render_template('signup.html', form=form)
-
-@app.route('/profile')
-def profile():
-    user_name = current_user.name
-
-    return render_template('profile.html', name=user_name)
+    return render_template('/register.html', form=form)
+@app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 if __name__ == '__main__':
     app.run()

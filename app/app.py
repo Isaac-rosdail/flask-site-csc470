@@ -80,7 +80,7 @@ def register():
         db.session.commit()
         return redirect(url_for('home'))
 
-    return render_template('/register.html', form=form)
+    return render_template('register.html', form=form)
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():

@@ -12,7 +12,7 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login"
+login_manager.login_view = "home"
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -21,11 +21,11 @@ def load_user(user_id):
 
 # Define models (User, Ticket)
 class User(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     # name = db.Column(db.String(30), unique=True)
-    username = db.Column(db.String(30), unique=True)
+    username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(30), unique=True) # email must be unique
-    password = db.Column(db.String(30))
+    password = db.Column(db.String(30), nullable=False)
     role = db.Column(db.Integer)
     dept = db.Column(db.String(30))
 
@@ -52,16 +52,16 @@ def get_data():
 def home():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user and user.check_password(password=form.password.data):
+        user = User.query.filter_by(username=form.username.data).first() # Check if user is in db first
+        if user and user.password == form.password.data:
             login_user(user)
-            return redirect(url_for('dashboard.html')) # Changed redirect to profile page
+            return redirect(url_for('dashboard'))  # Changed redirect to profile page
     return render_template("home.html", form=form)
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('/login'))
+    return redirect(url_for('home'))
 @app.route("/tickets/")
 def tickets():
     return render_template("tickets.html")
@@ -78,7 +78,7 @@ def register():
         new_user = User(username=form.username.data, password=form.password.data, email=form.email.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
+        return redirect(url_for('home'))
 
     return render_template('/register.html', form=form)
 @app.route('/dashboard', methods=['GET', 'POST'])

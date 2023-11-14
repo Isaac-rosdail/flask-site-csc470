@@ -60,36 +60,6 @@ def home():
             flash('Login successful', 'success')
             return redirect(url_for('dashboard'))  # Changed redirect to profile page
     return render_template("home.html", form=form)
-@app.route('/logout', methods=['GET', 'POST'])
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
-@app.route("/tickets/", methods=['GET', 'POST'])
-def tickets():
-    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all()
-
-    return render_template("tickets.html", tickets=user_tickets)
-@app.route("/submit_ticket/", methods=['GET', 'POST'])
-@login_required
-def submit_ticket():
-    form = TicketForm()
-
-    # Pre-fill form requestor & created by fields
-    if request.method == 'GET':
-        form.created_by.data = current_user.name
-
-    if form.validate_on_submit():
-        new_ticket = Ticket(created_by=form.created_by.data,
-                            title=form.title.data,
-                            description=form.description.data,
-                            location=form.location.data,
-                            attachment=form.attachment.data)
-        db.session.add(new_ticket)
-        db.session.commit()
-        return redirect(url_for('tickets'))
-
-    return render_template("submit_ticket.html", form=form)
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -113,6 +83,39 @@ def register():
 def dashboard():
     flash('Great success', 'success')
     return render_template('dashboard.html')
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+@app.route("/tickets/", methods=['GET', 'POST'])
+@login_required
+def mytickets():
+    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all()
+
+    return render_template("mytickets.html", tickets=user_tickets)
+@app.route("/submit_ticket/", methods=['GET', 'POST'])
+@login_required
+def submit_ticket():
+    form = TicketForm()
+
+    # Pre-fill form requestor & created by fields
+    if request.method == 'GET':
+        form.created_by.data = current_user.name
+
+    if form.validate_on_submit():
+        new_ticket = Ticket(created_by=form.created_by.data,
+                            title=form.title.data,
+                            description=form.description.data,
+                            location=form.location.data,
+                            attachment=form.attachment.data)
+        db.session.add(new_ticket)
+        db.session.commit()
+        return redirect(url_for('tickets'))
+
+    return render_template("submit_ticket.html", form=form)
+
+
 
 if __name__ == '__main__':
     app.run()

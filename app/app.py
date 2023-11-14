@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
-from forms import RegisterForm, LoginForm, TicketForm  # Import register/login forms
+from flask_sqlalchemy import SQLAlchemy     # Initialize SQLAlchemy
+from forms import RegisterForm, LoginForm, TicketForm      # Import forms from forms.py
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from flask import flash ## debugging login stuff
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -11,6 +10,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Not needed?
 app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
 db = SQLAlchemy(app)
 
+# Setup for persistent login sessions across site/app
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "home"
@@ -41,7 +41,7 @@ class Ticket(db.Model):
     attachment = db.Column(db.String(30))
 
 
-# Initialize new database if needed
+# Initialize new database if none exists
 with app.app_context():
     db.create_all()
 
@@ -52,19 +52,19 @@ def get_data():
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form = LoginForm()
+    # Check for user in db, if password matches, redirect to dashboard template
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()  # Check if user is in db first
+        user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data:
             login_user(user)
-            return redirect(url_for('dashboard'))       # redirect to dashboard when logged in
+            return redirect(url_for('dashboard'))
     return render_template("home.html", form=form)
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
 
-    # Validation & Saving to db
     if form.validate_on_submit():
-        # Store stuff from form into database User entry
+        # Store form info as new user
         new_user = User(name=form.name.data,
                         username=form.username.data,
                         email=form.email.data,
@@ -88,7 +88,7 @@ def logout():
 @app.route("/tickets", methods=['GET', 'POST'])
 @login_required
 def mytickets():
-    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all() # Grab only the user's own ticket(s)
+    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all()  # Grab only the user's own ticket(s)
 
     return render_template("mytickets.html", tickets=user_tickets)
 @app.route("/submit_ticket", methods=['GET', 'POST'])
@@ -96,11 +96,12 @@ def mytickets():
 def submit_ticket():
     form = TicketForm()
 
-    # Pre-fill form requestor & created by fields
+    # Pre-fill 'created_by' field
     if request.method == 'GET':
         form.created_by.data = current_user.name
 
     if form.validate_on_submit():
+        # Store form data as new ticket
         new_ticket = Ticket(created_by=form.created_by.data,
                             title=form.title.data,
                             description=form.description.data,
@@ -114,7 +115,7 @@ def submit_ticket():
 @app.route('/edit_ticket/<int:ticket_id>', methods=['GET', 'POST'])
 @login_required
 def edit_ticket(ticket_id):
-    ticket = Ticket.query.get_or_404(ticket_id)
+    ticket = Ticket.query.get_or_404(ticket_id)  # Grab ticket based on ticket_id match
     form = TicketForm(obj=ticket)
 
     # Fill form with data from current ticket
@@ -125,8 +126,7 @@ def edit_ticket(ticket_id):
         ticket.location = form.location.data
         ticket.attachment = form.attachment.data
 
-        db.session.commit()
-
+        db.session.commit()  # Save any changes
         return redirect(url_for('mytickets'))
 
     return render_template('edit_ticket.html', form=form)

@@ -1,10 +1,8 @@
 {% extends "layout.html" %}
-{% block title %}
-Tutorial
-{% endblock %}
+{% block title %} Home {% endblock %}
+
 {% block content %}
-<p>Probably a place for user sign in.</p>
-<h2>Sign In:</h2>
+<h3>Sign In:</h3>
 <form method="post">
     {{ form.hidden_tag() }} <!-- Need for CSRF token -->
     <p>
@@ -20,6 +18,6 @@ Tutorial
     </p>
 </form>
 
-<div class="body-content">Don't have an account? Register here: </div>
+<div class="body-content">No account? Register here: </div>
 <button onclick="location.href='{{ url_for('register') }}'">Register</button>
 {% endblock %}

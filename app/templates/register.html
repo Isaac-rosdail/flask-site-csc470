@@ -1,9 +1,7 @@
 {% extends "layout.html" %}
-{% block title %}
-Sign Up
-{% endblock %}
+{% block title %} Register {% endblock %}
+
 {% block content %}
-<p>Probably a place for user to register.</p>
 <h2>Register</h2>
 <form method="post">
     {{ form.hidden_tag() }} <!-- Needed for CSRF token -->

@@ -5,6 +5,28 @@ Tickets
 {% block content %}
 <h3>(Where the tickets would go)</h3>
 
+<table>
+    <tr>
+        <th>Ticket ID</th>
+        <th>Ticket Title</th>
+        <th>Created by</th>
+    </tr>
+    {% if tickets %}
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.created_by }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="3">No tickets found :(</td>
+        </tr>
+    {% endif %}
+</table>
+
+<!--
 <table style="width:100%">
     <tr>
       <th>Ticket Name</th>
@@ -17,4 +39,5 @@ Tickets
       <td>Everyone!!</td>
     </tr>
   </table>
+  -->
 {% endblock %}

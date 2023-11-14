@@ -32,8 +32,8 @@ class User(UserMixin, db.Model):
 
 
 class Ticket(db.Model):
-    ticket_id = db.Column(db.Integer, primary_key=True)
-    created_by = db.Column(db.Integer) # get dept from finding user based on their user_id?
+    id = db.Column(db.Integer, primary_key=True)
+    created_by = db.Column(db.String(30)) # get dept from finding user based on their user_id?
     title = db.Column(db.String(30))
     description = db.Column(db.String(100))
     location = db.Column(db.String(30))
@@ -64,10 +64,12 @@ def home():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-@app.route("/tickets/")
+@app.route("/tickets/", methods=['GET', 'POST'])
 def tickets():
-    return render_template("tickets.html")
-@app.route("/submit_ticket/")
+    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all()
+
+    return render_template("tickets.html", tickets=user_tickets)
+@app.route("/submit_ticket/", methods=['GET', 'POST'])
 @login_required
 def submit_ticket():
     form = TicketForm()
@@ -82,7 +84,10 @@ def submit_ticket():
                             description=form.description.data,
                             location=form.location.data,
                             attachment=form.attachment.data)
+        db.session.add(new_ticket)
+        db.session.commit()
         return redirect(url_for('tickets'))
+
     return render_template("submit_ticket.html", form=form)
 @app.route("/register", methods=['GET', 'POST'])
 def register():

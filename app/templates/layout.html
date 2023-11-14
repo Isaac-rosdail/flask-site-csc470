@@ -19,11 +19,21 @@
         <h1>Corn Ticketing System</h1>
         <div class="navbar">
             <a href="{{ url_for('home') }}" class="navbar-brand">Home</a>
+            <a href="{{ url_for('dashboard') }}" class="navbar-item">Dashboard</a>
             <a href="{{ url_for('tickets') }}" class="navbar-item">Tickets</a>
             <a href="{{ url_for('submit_ticket') }}" class="navbar-item">Request</a>
             <button id="dark-mode-toggle" aria-label="toggle dark mode" class="text-right">Toggle Dark Mode</button>
         </div>
 
+        <!-- Displays currently logged-in user, if any -->
+        {% if current_user.is_authenticated %}
+            <p>Welcome, {{ current_user.username }}</p>
+            <a href="{{url_for('logout')}}">Click here to logout</a>
+        {% else %}
+            <p>Not signed in.</p>
+        {% endif %}
+
+        <!-- Displays errors from 'flash()' -->
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for message in messages %}
@@ -31,6 +41,7 @@
             {% endfor %}
         {% endif %}
         {% endwith %}
+
         <div class="body-content">
             {% block content %}
             {% endblock %}

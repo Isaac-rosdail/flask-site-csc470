@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
-from forms import RegisterForm, LoginForm  # Import register/login forms
+from forms import RegisterForm, LoginForm, TicketForm  # Import register/login forms
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask import flash ## debugging login stuff
 
@@ -23,7 +23,7 @@ def load_user(user_id):
 # Define models (User, Ticket)
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # name = db.Column(db.String(30), unique=True)
+    name = db.Column(db.String(30))
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(30), unique=True) # email must be unique
     password = db.Column(db.String(30), nullable=False)
@@ -40,8 +40,7 @@ class Ticket(db.Model):
     attachment = db.Column(db.String(30))
 
 
-## GRANT SELECT ONLY, row level security? # Grant, select, # SELECT - view it, # Adding Tickets Table
-# Init db & tables if needed
+# Initialize new database if needed
 with app.app_context():
     db.create_all()
 
@@ -69,8 +68,22 @@ def logout():
 def tickets():
     return render_template("tickets.html")
 @app.route("/submit_ticket/")
+@login_required
 def submit_ticket():
-    return render_template("submit_ticket.html")
+    form = TicketForm()
+
+    # Pre-fill form requestor & created by fields
+    if request.method == 'GET':
+        form.created_by.data = current_user.name
+
+    if form.validate_on_submit():
+        new_ticket = Ticket(created_by=form.created_by.data,
+                            title=form.title.data,
+                            description=form.description.data,
+                            location=form.location.data,
+                            attachment=form.attachment.data)
+        return redirect(url_for('tickets'))
+    return render_template("submit_ticket.html", form=form)
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -78,7 +91,12 @@ def register():
     # Validation & Saving to db
     if form.validate_on_submit():
         # Store stuff from form into database User entry
-        new_user = User(username=form.username.data, password=form.password.data, email=form.email.data)
+        new_user = User(name=form.name.data,
+                        username=form.username.data,
+                        email=form.email.data,
+                        password=form.password.data,
+                        role=form.role.data,
+                        dept=form.dept.data)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('home'))

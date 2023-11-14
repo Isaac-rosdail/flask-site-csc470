@@ -10,12 +10,19 @@ class LoginForm(FlaskForm):
 
 
 class RegisterForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email')
     password = PasswordField('Password', validators=[DataRequired()])
     role = RadioField(choices=[(0, 'Customer'), (1, 'Staff'), (2, 'Admin')], default=0, validators=[DataRequired()])
     dept = RadioField(choices=[(0, 'Unsure'), (1, 'HR'), (2, 'Marketing'), (3, 'Political Wing'), (4, 'Development')], default=0, validators=[DataRequired()])
-    submit = SubmitField('Sign Up')
+    submit = SubmitField('Register')
 
 
-# class TicketForm(FlaskForm):
+class TicketForm(FlaskForm):
+    created_by = StringField('Created by', validators=[DataRequired()])
+    title = StringField('Title: ', validators=[DataRequired()])
+    description = StringField('Description')
+    location = StringField('Location')
+    attachment = StringField('Attachment(s)')
+    submit = SubmitField('Submit Ticket')

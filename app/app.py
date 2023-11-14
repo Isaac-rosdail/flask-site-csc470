@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
 from forms import RegisterForm, LoginForm  # Import register/login forms
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask import flash ## debugging login stuff
 
 app = Flask(__name__)
+app.secret_key = 'corn'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Not needed?
 app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
@@ -52,9 +54,10 @@ def get_data():
 def home():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first() # Check if user is in db first
+        user = User.query.filter_by(username=form.username.data).first()  # Check if user is in db first
         if user and user.password == form.password.data:
             login_user(user)
+            flash('Login successful', 'success')
             return redirect(url_for('dashboard'))  # Changed redirect to profile page
     return render_template("home.html", form=form)
 @app.route('/logout', methods=['GET', 'POST'])
@@ -84,6 +87,7 @@ def register():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+    flash('Great success', 'success')
     return render_template('dashboard.html')
 
 if __name__ == '__main__':

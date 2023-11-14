@@ -54,11 +54,9 @@ def home():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()  # Check if user is in db first
-        flash(f"Password: {form.password.data}")
         if user and user.password == form.password.data:
             login_user(user)
-            flash('Login successful', 'success')
-            return redirect(url_for('dashboard'))  # Changed redirect to profile page
+            return redirect(url_for('dashboard'))       # redirect to dashboard when logged in
     return render_template("home.html", form=form)
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -81,7 +79,6 @@ def register():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
-    flash('Great success', 'success')
     return render_template('dashboard.html')
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -111,7 +108,7 @@ def submit_ticket():
                             attachment=form.attachment.data)
         db.session.add(new_ticket)
         db.session.commit()
-        return redirect(url_for('tickets'))
+        return redirect(url_for('mytickets'))
 
     return render_template("submit_ticket.html", form=form)
 

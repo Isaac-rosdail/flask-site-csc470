@@ -17,8 +17,7 @@ login_manager.login_view = "home"
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
-
+    return db.session.get(User, user_id)
 
 # Define models (User, Ticket)
 class User(UserMixin, db.Model):
@@ -79,6 +78,7 @@ def register():
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required
 def dashboard():
+
     return render_template('dashboard.html')
 @app.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -87,10 +87,15 @@ def logout():
     return redirect(url_for('home'))
 @app.route("/tickets", methods=['GET', 'POST'])
 @login_required
-def mytickets():
-    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all()  # Grab only the user's own ticket(s)
+def tickets():
+    if current_user.role == 0:
+        ticket_list = Ticket.query.filter_by(created_by=current_user.name).all()  # Grab only the user's own ticket(s)
+    elif current_user.role == 1:
+        ticket_list = Ticket.query.filter_by(dept=current_user.dept).all()
+    else:
+        ticket_list = Ticket.query.all()
 
-    return render_template("mytickets.html", tickets=user_tickets)
+    return render_template("tickets.html", tickets=ticket_list)
 @app.route("/submit_ticket", methods=['GET', 'POST'])
 @login_required
 def submit_ticket():
@@ -109,7 +114,7 @@ def submit_ticket():
                             attachment=form.attachment.data)
         db.session.add(new_ticket)
         db.session.commit()
-        return redirect(url_for('mytickets'))
+        return redirect(url_for('tickets'))
 
     return render_template("submit_ticket.html", form=form)
 @app.route('/edit_ticket/<int:ticket_id>', methods=['GET', 'POST'])
@@ -127,7 +132,7 @@ def edit_ticket(ticket_id):
         ticket.attachment = form.attachment.data
 
         db.session.commit()  # Save any changes
-        return redirect(url_for('mytickets'))
+        return redirect(url_for('tickets'))
 
     return render_template('edit_ticket.html', form=form)
 

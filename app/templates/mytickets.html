@@ -6,20 +6,28 @@
 <table>
     <tr>
         <th>Ticket ID</th>
-        <th>Ticket Title</th>
         <th>Created by</th>
+        <th>Department</th>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Location</th>
+        <th>Attachment(s)</th>
     </tr>
     {% if tickets %}
         {% for ticket in tickets %}
         <tr>
             <td>{{ ticket.id }}</td>
-            <td>{{ ticket.title }}</td>
             <td>{{ ticket.created_by }}</td>
+            <td>{{ ticket.dept }}</td>
+            <td>{{ ticket.title }}</td>
+            <td>{{ ticket.description }}</td>
+            <td>{{ ticket.location }}</td>
+            <td>{{ ticket.attachment }}</td>
         </tr>
         {% endfor %}
     {% else %}
         <tr>
-            <td colspan="3">No tickets found :(</td>
+            <td colspan="7">No tickets found :(</td>
         </tr>
     {% endif %}
 </table>

@@ -85,13 +85,13 @@ def dashboard():
 def logout():
     logout_user()
     return redirect(url_for('home'))
-@app.route("/tickets/", methods=['GET', 'POST'])
+@app.route("/tickets", methods=['GET', 'POST'])
 @login_required
 def mytickets():
-    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all()
+    user_tickets = Ticket.query.filter_by(created_by=current_user.name).all() # Grab only the user's own ticket(s)
 
     return render_template("mytickets.html", tickets=user_tickets)
-@app.route("/submit_ticket/", methods=['GET', 'POST'])
+@app.route("/submit_ticket", methods=['GET', 'POST'])
 @login_required
 def submit_ticket():
     form = TicketForm()
@@ -111,8 +111,25 @@ def submit_ticket():
         return redirect(url_for('mytickets'))
 
     return render_template("submit_ticket.html", form=form)
+@app.route('/edit_ticket/<int:ticket_id>', methods=['GET', 'POST'])
+@login_required
+def edit_ticket(ticket_id):
+    ticket = Ticket.query.get_or_404(ticket_id)
+    form = TicketForm(obj=ticket)
 
+    # Fill form with data from current ticket
+    if form.validate_on_submit():
+        ticket.dept = form.dept.data
+        ticket.title = form.title.data
+        ticket.description = form.description.data
+        ticket.location = form.location.data
+        ticket.attachment = form.attachment.data
 
+        db.session.commit()
+
+        return redirect(url_for('mytickets'))
+
+    return render_template('edit_ticket.html', form=form)
 
 if __name__ == '__main__':
     app.run()

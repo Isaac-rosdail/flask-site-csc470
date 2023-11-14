@@ -12,6 +12,7 @@
         <th>Description</th>
         <th>Location</th>
         <th>Attachment(s)</th>
+        <th>Edit</th>
     </tr>
     {% if tickets %}
         {% for ticket in tickets %}
@@ -23,11 +24,12 @@
             <td>{{ ticket.description }}</td>
             <td>{{ ticket.location }}</td>
             <td>{{ ticket.attachment }}</td>
+            <td><a href="{{ url_for('edit_ticket', ticket_id=ticket.id) }}" class="btn btn-primary">Edit</a></td>
         </tr>
         {% endfor %}
     {% else %}
         <tr>
-            <td colspan="7">No tickets found :(</td>
+            <td colspan="8">No tickets found :(</td>
         </tr>
     {% endif %}
 </table>

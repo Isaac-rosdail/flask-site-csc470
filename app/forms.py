@@ -21,6 +21,7 @@ class RegisterForm(FlaskForm):
 
 class TicketForm(FlaskForm):
     created_by = StringField('Created by', validators=[DataRequired()])
+    dept = StringField('Department', validators=[DataRequired()])
     title = StringField('Title: ', validators=[DataRequired()])
     description = StringField('Description')
     location = StringField('Location')

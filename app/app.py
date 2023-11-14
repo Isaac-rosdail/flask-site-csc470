@@ -34,6 +34,7 @@ class User(UserMixin, db.Model):
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     created_by = db.Column(db.String(30)) # get dept from finding user based on their user_id?
+    dept = db.Column(db.String(30))
     title = db.Column(db.String(30))
     description = db.Column(db.String(100))
     location = db.Column(db.String(30))

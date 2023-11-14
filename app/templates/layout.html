@@ -23,20 +23,14 @@
             <a href="{{ url_for('submit_ticket') }}" class="navbar-item">Request</a>
             <button id="dark-mode-toggle" aria-label="toggle dark mode" class="text-right">Toggle Dark Mode</button>
         </div>
-        <div>
-            {% if current_user.is_authenticated %}
-                User: {{ current_user.username }}
-            {% else %}
-                <a href="{{ url_for('home') }}">Login</a>
-            {% endif %}
-        </div>
-        <div>
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{category}}">{{message}}</div>
-                {% endfor %}
-            {% endwith %}
-        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for message in messages %}
+                <div>ERROR: {{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="body-content">
             {% block content %}
             {% endblock %}

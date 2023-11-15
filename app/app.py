@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy     # Initialize SQLAlchemy
 from forms import RegisterForm, LoginForm, TicketForm      # Import forms from forms.py
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
+from forms import LoginForm, SignupForm  # import signup/login forms defined in forms.py
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -40,7 +41,7 @@ class Ticket(db.Model):
     attachment = db.Column(db.String(30))
 
 
-# Initialize new database if none exists
+# Init db & tables if needed
 with app.app_context():
     db.create_all()
 

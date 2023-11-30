@@ -1,18 +1,20 @@
 # Used to set up testing env and get things to be called before every test
 import pytest
-from app.app import app, db
+from app.app import app as flask_app, db, User  # Renamed to avoid conflict
+
 
 @pytest.fixture()
-def app():
+def app_ctx():  # Renamed the fixture
     # Everything that happens before running a test
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    flask_app.config['TESTING'] = True
+    flask_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 
-    with app.app_context():
+    with flask_app.app_context():
         db.create_all()
-
-    yield app
+        yield flask_app
+        db.session.remove()
+        db.drop_all()
 
 @pytest.fixture()
-def client(app):
-    return app.test_client()  # Allows us to simulate requests to the app
+def client(app_ctx):  # Use the renamed fixture here
+    return app_ctx.test_client()  # Allows us to simulate requests to the app

@@ -1,6 +1,13 @@
 from app.app import User
 
+# Ensure returns data.json file
+def test_data_json(client):
+    response = client.get('/api/data')
+    assert response.status_code == 200
+    assert response.headers['Content-Type'] == 'application/json'
 
+
+# Test that register function adds user to db
 def test_registration(client, app_ctx):
     with app_ctx.app_context():
         form_data = {

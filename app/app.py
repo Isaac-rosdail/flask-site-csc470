@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Not needed?
 app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
 
-# Remove CRSF token for testing
+# Remove CSRF token for testing
 app.config['WTF_CSRF_ENABLED'] = False
 
 db = SQLAlchemy(app)
@@ -23,6 +23,7 @@ login_manager.login_view = "home"
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, user_id)
+
 
 # Define models (User, Ticket)
 class User(UserMixin, db.Model):

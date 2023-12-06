@@ -30,18 +30,56 @@
     padding: 5px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
-/* Ticket table(s) styles */
-table, td, th {
-    border: 1px solid black;
+table {
     border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
     text-align: center;
+    padding: 8px;
 }
-th {
-    background-color: lightgrey;
-}
+
 /* Dark mode styles */
 .dark-mode {
-    background-color: black;
-    color: white;
+    background-color: rgb(43, 42, 42);
+    color: rgb(255, 255, 255);
+
+    table, td, th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+        color: aliceblue;
+    }
+    th {
+        background-color: rgb(172, 171, 171);
+    }
+    
+    tr:nth-child(even) {
+    background-color: #757474;
+    }
+    tr:nth-child(odd) {
+    background-color: #f3eeee;
+    }
+}
+
+.light-mode {
+    background-color: rgb(219, 218, 218);
+    color: rgb(0, 0, 0);
+
+    table, td, th {
+        border: 1px solid black;
+        border-collapse: collapse;
+        text-align: center;
+    }
+    th {
+        background-color: rgb(224, 216, 216);
+    }
+
+    tr:nth-child(even) {
+    background-color: #c9c6c6;
+    }
+    tr:nth-child(odd) {
+    background-color: #b3afaf;
+    }
 }

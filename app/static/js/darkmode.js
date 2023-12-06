@@ -19,6 +19,7 @@ if(darkMode === 'enabled'){
 else{
     disableDarkMode();
 }
+
 // Check for button toggle
 darkModeToggle.addEventListener('click', () => {
     darkMode = localStorage.getItem('darkMode');

@@ -4,7 +4,7 @@
 }
 
 .navbar {
-    background-color: rgb(198, 89, 83);
+    background-color: maroon;
     font-size: 1em;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: white;
@@ -43,7 +43,7 @@ th, td {
 /* Dark mode styles */
 .dark-mode {
     background-color: rgb(43, 42, 42);
-    color: rgb(255, 255, 255);
+    color: rgb(221, 220, 220);
 
     table, td, th {
         border: 1px solid black;
@@ -52,7 +52,7 @@ th, td {
         color: aliceblue;
     }
     th {
-        background-color: rgb(172, 171, 171);
+        background-color: maroon;
     }
     
     tr:nth-child(even) {
@@ -64,7 +64,7 @@ th, td {
 }
 
 .light-mode {
-    background-color: rgb(219, 218, 218);
+    background-color: rgb(196, 196, 196);
     color: rgb(0, 0, 0);
 
     table, td, th {
@@ -73,7 +73,8 @@ th, td {
         text-align: center;
     }
     th {
-        background-color: rgb(224, 216, 216);
+        background-color: maroon;
+        color: white;
     }
 
     tr:nth-child(even) {

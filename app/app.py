@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for
-from .forms import RegisterForm, LoginForm, TicketForm      # Import forms from forms.py
+from forms import RegisterForm, LoginForm, TicketForm      # Import forms from forms.py
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy    # Init SQLAlchemy
 
@@ -8,10 +8,6 @@ app.secret_key = 'corn'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Not needed?
 app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
-
-# Remove CSRF token for testing
-app.config['WTF_CSRF_ENABLED'] = False
-
 db = SQLAlchemy(app)
 
 # Setup for persistent login sessions across site/app
@@ -19,11 +15,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "home"
 
-
 @login_manager.user_loader
 def load_user(user_id):
     return db.session.get(User, user_id)
-
 
 # Define models (User, Ticket)
 class User(UserMixin, db.Model):
@@ -79,8 +73,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('home'))
-    else:
-        print(form.errors)
+
     return render_template('register.html', form=form)
 @app.route('/dashboard', methods=['GET', 'POST'])
 @login_required

@@ -47,17 +47,9 @@ class Ticket(db.Model):
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ticket_id = db.Column
-    created_by = db.Column(db.String(30))  # get dept from finding user based on their user_id?
-    assigned_to = db.Column(db.String(30))
-    status = db.Column(db.String(30))
-    priority = db.Column(db.String(30))
-    dept = db.Column(db.String(30))
-    title = db.Column(db.String(30))
-    description = db.Column(db.String(100))
-    location = db.Column(db.String(30))
-    attachment = db.Column(db.String(30))
-
+    ticket_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer)
+    content = db.Column(db.String(30))
 
 # Init db & tables if needed
 with app.app_context():

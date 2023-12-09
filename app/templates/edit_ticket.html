@@ -18,6 +18,18 @@
         {{ form.title(size=30) }}
     </p>
     <p>
+        {{ form.assigned_to.label }} <br> <!-- Who is the ticket assigned to -->
+        {{ form.assigned_to(size=30) }}
+    </p>
+    <p>
+        {{ form.status.label }} <br> <!-- Status of the ticket -->
+        {{ form.status(size=3) }}
+    </p>
+    <p>
+        {{ form.priority.label }} <br> <!-- Priority of the ticket -->
+        {{ form.priority(size=3) }}
+    </p>
+    <p>
         {{ form.description.label }} <br> <!-- Brief title of issue -->
         {{ form.description(size=30) }}
     </p>
@@ -34,3 +46,7 @@
     </p>
 </form>
 {% endblock %}
+<footer>
+    <hr/>
+    <p>Team Corn, LLC. &copy; 2023</p>
+</footer>

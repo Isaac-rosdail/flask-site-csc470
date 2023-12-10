@@ -4,6 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination
+from werkzeug.security import generate_password_hash,check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -68,9 +69,11 @@ def home():
     # Check for user in db, if password matches, redirect to dashboard template
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
-        if user and user.password == form.password.data:
+        if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid username or password.', 'error')
     return render_template("home.html", form=form)
 
 
@@ -80,11 +83,13 @@ def register():
 
     if form.validate_on_submit():
         try:
+            hashed_password = generate_password_hash(form.password.data)
+            
             # Create a new user instance from form data
             new_user = User(name=form.name.data,
                             username=form.username.data,
                             email=form.email.data,
-                            password=form.password.data,
+                            password=hashed_password,
                             dept=form.dept.data)
             db.session.add(new_user)
             db.session.commit()

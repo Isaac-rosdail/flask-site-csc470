@@ -66,6 +66,7 @@ def get_data():
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form = LoginForm()
+    logout_user()
     # Check for user in db, if password matches, redirect to dashboard template
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()

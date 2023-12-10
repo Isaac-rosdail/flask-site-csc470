@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, url_for, flash
 from forms import RegisterForm, LoginForm, TicketForm, EditUserForm  # Import forms from forms.py
+=======
+from flask import Flask, render_template, request, redirect, url_for
+from app.forms import RegisterForm, LoginForm, TicketForm  # Import forms from forms.py
+>>>>>>> master
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError

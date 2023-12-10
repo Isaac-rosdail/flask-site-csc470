@@ -39,8 +39,10 @@
         <div class="navbars">
             <a href="{{ url_for('home') }}" class="navbars-brand">Home</a>
             <a href="{{ url_for('dashboard') }}" class="navbars-item">Dashboard</a>
-            <a href="{{ url_for('users') }}" class="navbars-item">Users</a>
-            <a href="{{ url_for('tickets') }}" class="navbars-item">Tickets</a>
+            {% if current_user.role==2 or current_user.role==1 %}
+                <a href="{{ url_for('users') }}" class="navbars-item">Users</a>
+                <a href="{{ url_for('tickets') }}" class="navbars-item">Tickets</a>
+            {% endif %}
             <a href="{{ url_for('submit_ticket') }}" class="navbars-item">Request</a>
             <a href="{{ url_for('logout') }}" class="navbars-item" style="float: right;">Logout</a>
         </div>

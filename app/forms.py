@@ -14,11 +14,11 @@ class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[
         DataRequired(),
-        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+$', message="Username must be in the format 'firstname.lastname'")])
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+[0-9]+$', message="Username must be in the format 'firstname.lastname' or 'firstname.lastname123'")])
     email = StringField('Email', validators=[
         DataRequired(),
         Email(message='Invalid email address.'),
-        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+@corn\\.com$', message="Email must be in the format 'firstname.lastname@corn.com'")])
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+[0-9]+@corn\\.com$', message="Email must be in the format 'firstname.lastname@corn.com'")])
     password = PasswordField('Password', validators=[
         DataRequired(),
         Length(min=8, message="Password must be at least 8 characters long."),

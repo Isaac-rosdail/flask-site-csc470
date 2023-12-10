@@ -1,4 +1,4 @@
-from app.app import User
+from app.app import User, db
 
 # Ensure returns data.json file
 def test_data_json(client):
@@ -23,3 +23,4 @@ def test_registration(client, app_ctx):
         assert User.query.count() == 1
         user = User.query.first()
         assert user.username == "testUsername"
+

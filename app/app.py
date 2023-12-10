@@ -3,6 +3,7 @@ from app.forms import RegisterForm, LoginForm, TicketForm  # Import forms from f
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from flask_paginate import Pagination
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -54,6 +55,19 @@ class Comment(db.Model):
 # Init db & tables if needed
 with app.app_context():
     db.create_all()
+
+# Checks if default admin account exists, creates one if not
+def create_admin_user():
+    admin = User.query.filter_by(username='admin').first()
+    if not admin:
+        # Create admin user
+        admin = User(
+            username='admin',
+            email='admin@corn.com',
+            password=generate_password_hash('admin_pass', method='sha256'),
+        )
+        db.session.add(admin)
+        db.session.commit()
 
 
 @app.route("/api/data")

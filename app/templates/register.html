@@ -3,23 +3,23 @@
 
 {% block content %}
 <h2>Register</h2>
-<form method="post">
+<form id="registerForm" method="post" onsubmit="return validateForm()">
     {{ form.hidden_tag() }} <!-- Needed for CSRF token -->
     <p>
         {{form.name.label}} <br>
-        <div style="color: black;">{{form.name(size=30)}}</div>
+        {{form.name(size=30)}}
     </p>
     <p>
         {{form.username.label}} <br>
-        <div style="color: black;">{{form.username(size=30)}}</div>
+        {{form.username(size=30)}}
     </p>
     <p>
         {{form.email.label}} <br>
-        <div style="color: black;">{{form.email(size=30)}}</div>
+        {{form.email(size=30)}}
     </p>
     <p>
         {{form.password.label}} <br>
-        <div style="color: black;">{{form.password(size=30)}}</div>
+        {{form.password(size=30)}}
     </p>
     <p>
         {{form.role.label}} <br>
@@ -36,7 +36,7 @@
     <p style="color: black;">{{form.submit}}</p>
 </form>
 
-<button onclick="location.href='/'" style="color: black;">Cancel / Back</button>
+<button onclick="location.href='/'">Cancel / Back</button>
 {% endblock %}
 <footer>
     <hr/>

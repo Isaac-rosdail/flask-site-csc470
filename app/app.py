@@ -1,7 +1,13 @@
+<<<<<<< HEAD
+from flask import Flask, render_template, request, redirect, url_for, flash
+from forms import RegisterForm, LoginForm, TicketForm, EditUserForm  # Import forms from forms.py
+=======
 from flask import Flask, render_template, request, redirect, url_for
 from app.forms import RegisterForm, LoginForm, TicketForm  # Import forms from forms.py
+>>>>>>> master
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
+from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination
 
 app = Flask(__name__)
@@ -29,7 +35,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(30), nullable=False, unique=True)
     email = db.Column(db.String(30), unique=True)  # email must be unique
     password = db.Column(db.String(30), nullable=False)
-    role = db.Column(db.Integer)
+    role = db.Column(db.String(30), default='user')
     dept = db.Column(db.String(30))
 
 
@@ -78,17 +84,24 @@ def register():
     form = RegisterForm()
 
     if form.validate_on_submit():
-        # Store form info as new user
-        new_user = User(name=form.name.data,
-                        username=form.username.data,
-                        email=form.email.data,
-                        password=form.password.data,
-                        role=form.role.data,
-                        dept=form.dept.data)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('home'))
+        try:
+            # Create a new user instance from form data
+            new_user = User(name=form.name.data,
+                            username=form.username.data,
+                            email=form.email.data,
+                            password=form.password.data,
+                            dept=form.dept.data)
+            db.session.add(new_user)
+            db.session.commit()
+            # Redirect to the home page or a confirmation page after successful registration
+            return redirect(url_for('home'))
+        except IntegrityError:
+            # Roll back the session to a clean state
+            db.session.rollback()
+            # Flash an error message to the user
+            flash('This username already exists. Please choose a different one.', 'error')
 
+    # Render the registration form template
     return render_template('register.html', form=form)
 
 
@@ -209,20 +222,35 @@ def edit_ticket(ticket_id):
 @app.route('/_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(user_id):
-    user = User.query.get_or_404(user_id)  # Grab a user based on user_id match
-    form = RegisterForm(obj=User)
+    # Make sure only admins can access this page
+    if not current_user.role == 'admin':
+        flash('You do not have permission to edit user roles.')
+        return redirect(url_for('dashboard'))
+
+    user = User.query.get_or_404(user_id)
+    form = EditUserForm(obj=user)  # Instantiate EditUserForm
 
     if form.validate_on_submit():
-        # Update form info for user
-        user = User(name=form.name.data,
-                        username=form.username.data,
-                        email=form.email.data,
-                        role=form.role.data,
-                        dept=form.dept.data)
+        # Update user details
+        user.name = form.name.data
+        user.username = form.username.data
+        user.email = form.email.data
+        user.dept = form.dept.data
+        if 'role' in form:  # Check if role field is present in the form
+            user.role = form.role.data
         db.session.commit()
+        flash('User details updated successfully.', 'success')
         return redirect(url_for('users'))
+    elif request.method == 'GET':
+        # Pre-populate form
+        form.name.data = user.name
+        form.username.data = user.username
+        form.email.data = user.email
+        form.dept.data = user.dept
+        if 'role' in form:  # Pre-populate role if the field is present
+            form.role.data = user.role
 
-    return render_template('edit_user.html', form=form)
+    return render_template('edit_user.html', form=form, user_id=user_id)
 
 
 @app.route('/delete_ticket/<int:ticket_id>', methods=['GET','POST'])

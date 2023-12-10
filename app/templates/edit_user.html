@@ -14,17 +14,19 @@
         <div style="color: black;">{{form.email(size=30)}}</div>
     </p>
     <p>
-        {{form.role.label}} <br>
-        {% for option in form.role %}
-            {{ option }} {{ option.label }}
-        {% endfor %}
-    </p>
-    <p>
         {{form.dept.label}} <br>
         {% for option in form.dept %}
             {{ option }} {{ option.label }}
         {% endfor %}
     </p>
+    <p>
+        {{ form.role.label }} <br>
+        {% for option in form.role %}
+            <input type="radio" id="role-{{ option.data }}" name="{{ form.role.name }}" value="{{ option.data }}" {% if option.checked %} checked {% endif %}>
+            <label for="role-{{ option.data }}">{{ option.label.text }}</label><br>
+        {% endfor %}
+    </p>
+
     <p style="color: black;">{{form.submit}}</p>
 </form>
 {% endblock %}

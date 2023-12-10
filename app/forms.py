@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, RadioField, SelectField
-from wtforms.validators import DataRequired, ValidationError
+from wtforms.validators import DataRequired, ValidationError, Regexp, Email, Length
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 
@@ -12,12 +12,18 @@ class LoginForm(FlaskForm):
 
 class RegisterForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email')
-    password = PasswordField('Password', validators=[DataRequired()])
-    role = RadioField(choices=[(0, 'Customer'), (1, 'Staff'), (2, 'Admin')], default=0, validators=[DataRequired()])
-    dept = RadioField(choices=[(1, 'HR'), (2, 'Marketing'), (3, 'R&D'), (4, 'Development')], default=0,
-                      validators=[DataRequired()])
+    username = StringField('Username', validators=[
+        DataRequired(),
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+$', message="Username must be in the format 'firstname.lastname'")])
+    email = StringField('Email', validators=[
+        DataRequired(),
+        Email(message='Invalid email address.'),
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+@corn\\.com$', message="Email must be in the format 'firstname.lastname@corn.com'")])
+    password = PasswordField('Password', validators=[
+        DataRequired(),
+        Length(min=8, message="Password must be at least 8 characters long."),
+        Regexp('^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$', message="Password must include a number, an uppercase and a lowercase letter.")])
+    dept = RadioField('Department', choices=[('HR', 'HR'), ('Marketing', 'Marketing'), ('R&D', 'R&D'), ('Development', 'Development'), ('IT', 'IT')], validators=[DataRequired()])
     submit = SubmitField('Register')
 
 
@@ -42,3 +48,26 @@ class TicketForm(FlaskForm):
     ])
     attachment = StringField('Attachment(s)')
     submit = SubmitField('Submit Ticket')
+
+
+class EditUserForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired()])
+    username = StringField('Username', validators=[
+        DataRequired(),
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+$', message="Username must be in the format 'firstname.lastname'")])
+    email = StringField('Email', validators=[
+        DataRequired(),
+        Email(message='Invalid email address.'),
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+@corn\\.com$', message="Email must be in the format 'firstname.lastname@corn.com'")])
+    dept = RadioField('Department', choices=[('HR', 'HR'), ('Marketing', 'Marketing'), ('R&D', 'R&D'), ('Development', 'Development'), ('IT', 'IT')], validators=[DataRequired()])
+    
+    # Role field is only included if the current user is an admin
+    role = RadioField('Role', choices=[('user', 'User'), ('admin', 'Admin')], validators=[DataRequired()], default='user')
+
+    submit = SubmitField('Update')
+
+    def __init__(self, *args, **kwargs):
+        super(EditUserForm, self).__init__(*args, **kwargs)
+        # If the current user is not an admin, remove the role field
+        if not (current_user.is_authenticated and current_user.role == 'admin'):
+            del self.role

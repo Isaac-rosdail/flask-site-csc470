@@ -104,18 +104,29 @@ th{
   background-image: url('C://Users//Tobec//Downloads//search.png');
   background-position: 10px 10px;
   background-repeat: no-repeat;
+  color: black;
 }
 
+.input {
+    font-size: 16px;
+    font-family: inherit;
+    padding: 0.25em 0.5em;
+    background-color: #fff;
+    color: black;
+}
+.form {
+    color: black;
+}
 /* Dark mode styles */
 .dark-mode {
     background-color: rgb(43, 42, 42);
-    color: rgb(221, 220, 220);
+    color: aliceblue;
 
     table, td, th {
         border: 1px solid black;
         border-collapse: collapse;
         text-align: center;
-        color: aliceblue;
+        color: rgb(235, 235, 235);
     }
     th {
         background-color: maroon;
@@ -123,30 +134,51 @@ th{
     
     tr:nth-child(even) {
     background-color: #757474;
+    color: aliceblue;
     }
     tr:nth-child(odd) {
-    background-color: #f3eeee;
+    background-color: #949292;
+    color: rgb(0, 0, 0);
+    }
+
+    .pagination {
+        border: 1px solid black;
+        display: flex;
+        list-style: none;
+        padding: 0;
     }
 }
 
+
 .light-mode {
-    background-color: rgb(196, 196, 196);
+    background-color: rgb(161, 161, 161);
     color: rgb(0, 0, 0);
+
+    
 
     table, td, th {
         border: 1px solid black;
         border-collapse: collapse;
         text-align: center;
+        
+        color: rgb(235, 235, 235);
     }
     th {
         background-color: maroon;
-        color: white;
+        color: rgb(20, 20, 20);
     }
 
     tr:nth-child(even) {
-    background-color: #c9c6c6;
+    background-color: #757575;
     }
     tr:nth-child(odd) {
-    background-color: #b3afaf;
+    background-color: #8d8d8d;
+    }
+
+    .pagination {
+        border: 1px solid black;
+        display: flex;
+        list-style: none;
+        padding: 0;
     }
 }

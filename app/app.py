@@ -222,7 +222,7 @@ def edit_user(user_id):
         db.session.commit()
         return redirect(url_for('users'))
 
-    return render_template('modify_user.html', form=form)
+    return render_template('edit_user.html', form=form)
 
 
 @app.route('/delete_ticket/<int:ticket_id>', methods=['GET','POST'])

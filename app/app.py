@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 from flask import Flask, render_template, request, redirect, url_for, flash
-from forms import RegisterForm, LoginForm, TicketForm, EditUserForm  # Import forms from forms.py
-=======
-from flask import Flask, render_template, request, redirect, url_for
-from app.forms import RegisterForm, LoginForm, TicketForm  # Import forms from forms.py
->>>>>>> master
+from app.forms import RegisterForm, LoginForm, TicketForm, EditUserForm  # Import forms from forms.py
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
@@ -224,7 +219,7 @@ def edit_ticket(ticket_id):
 def edit_user(user_id):
     # Make sure only admins can access this page
     if not current_user.role == 'admin':
-        flash('You do not have permission to edit user roles.')
+        flash('You do not have permission to edit user roles.', 'STOP')
         return redirect(url_for('dashboard'))
 
     user = User.query.get_or_404(user_id)

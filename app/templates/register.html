@@ -7,19 +7,19 @@
     {{ form.hidden_tag() }} <!-- Needed for CSRF token -->
     <p>
         {{form.name.label}} <br>
-        {{form.name(size=30)}}
+        <div style="color: black;">{{form.name(size=30)}}</div>
     </p>
     <p>
         {{form.username.label}} <br>
-        {{form.username(size=30)}}
+        <div style="color: black;">{{form.username(size=30)}}</div>
     </p>
     <p>
         {{form.email.label}} <br>
-        {{form.email(size=30)}}
+        <div style="color: black;">{{form.email(size=30)}}</div>
     </p>
     <p>
         {{form.password.label}} <br>
-        {{form.password(size=30)}}
+        <div style="color: black;">{{form.password(size=30)}}</div>
     </p>
     <p>
         {{form.role.label}} <br>
@@ -33,10 +33,10 @@
             {{ option }} {{ option.label }}
         {% endfor %}
     </p>
-    <p>{{form.submit}}</p>
+    <p style="color: black;">{{form.submit}}</p>
 </form>
 
-<button onclick="location.href='/'">Cancel / Back</button>
+<button onclick="location.href='/'" style="color: black;">Cancel / Back</button>
 {% endblock %}
 <footer>
     <hr/>

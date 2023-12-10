@@ -117,6 +117,23 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+def create_default_admin():
+    admin = User.query.filter_by(username='admin').first()
+    if not admin:
+        hashed_password = generate_password_hash('CornAdmin1!', method='pbkdf2:sha256')
+        new_admin = User(
+            name='Admin User',
+            username='admin.account',
+            email='admin.account@corn.com',
+            password=hashed_password,
+            role='admin',
+            dept='IT'
+        )
+        db.session.add(new_admin)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
 
 def filter_tickets(username,filter_type):
     if filter_type=='created':
@@ -282,6 +299,9 @@ def view_ticket(ticket_id):
     comments = Comment.query.filter_by(ticket_id=ticket_id).all()
 
     return render_template('ticket_detail.html', ticket=ticket, comments=comments)
+
+with app.app_context():
+    create_default_admin()
 
 if __name__ == '__main__':
     app.run()

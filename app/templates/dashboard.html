@@ -19,7 +19,7 @@
                 <i class="fa fa-user fa-5x"></i><br/>
                 Tickets Opened by Me <br>
             </a>
-            {% if current_user.role==2 or current_user.role==1 %}
+            {% if current_user.is_authenticated and current_user.role == 'admin' %}
                 <a href="{{ url_for('tickets',username=current_user.username,filter_type='assigned')}}" class="btn btn-sq-lg btn-primary btn-block">
                 <i class="fa fa-user fa-5x"></i><br/>
                 Tickets Assigned to Me <br>
@@ -29,7 +29,7 @@
                 All Open Tickets <br>
                 </a>
             {% endif %}
-            {% if current_user.role==2%}
+            {% if current_user.is_authenticated and current_user.role == 'admin' %}
             <a href="{{ url_for('users')}}" class="btn btn-sq-lg btn-primary btn-block">
               <i class="fa fa-user fa-5x"></i><br/>
               View Users <br>

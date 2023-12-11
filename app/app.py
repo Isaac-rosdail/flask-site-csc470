@@ -296,6 +296,9 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()  # Save any changes
 
+    if(user_id==current_user.id):
+        return redirect(url_for('home'))
+
     return redirect(url_for('users'))
 
 @app.route('/ticket/<int:ticket_id>')

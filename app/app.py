@@ -4,7 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -13,7 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Not needed?
 app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
 db = SQLAlchemy(app)
 
-# Setup for persistent login sessions across site/app
+# Setup for persistent login sessions across app
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "home"
@@ -24,7 +24,7 @@ def load_user(user_id):
     return db.session.get(User, user_id)
 
 
-# Define models (User, Ticket)
+# Define models (User, Ticket, & Comment)
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
@@ -55,7 +55,7 @@ class Comment(db.Model):
     content = db.Column(db.String(30))
 
 
-# Init db & tables if needed
+# Initialize database if needed
 with app.app_context():
     db.create_all()
 

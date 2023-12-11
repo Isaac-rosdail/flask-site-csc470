@@ -4,12 +4,8 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination
-<<<<<<< HEAD
-from werkzeug.security import generate_password_hash, check_password_hash
-=======
 from werkzeug.security import generate_password_hash,check_password_hash
 import email_validator
->>>>>>> master
 
 app = Flask(__name__)
 app.secret_key = 'corn'

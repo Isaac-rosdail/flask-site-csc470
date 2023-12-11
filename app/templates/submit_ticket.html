@@ -23,10 +23,12 @@
         {{ form.title.label }} <br> <!-- Dept. they're in? -->
         <div style="color: black;">{{ form.title(size=30) }}</div>
     </p>
+    {% if form.assigned_to %}
     <p>
         {{ form.assigned_to.label }} <br> <!-- Who is the ticket assigned to -->
         <div style="color: black;">{{ form.assigned_to(size=30) }}</div>
     </p>
+    {% endif %}
         {% if form.status %}
     <p>
         {{ form.status.label }} <br> <!-- Status of the ticket -->

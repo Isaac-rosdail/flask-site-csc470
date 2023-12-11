@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination
 from werkzeug.security import generate_password_hash,check_password_hash
+import email_validator
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -189,9 +190,10 @@ def users():
 def submit_ticket():
     form = TicketForm()
 
-    if current_user.role==0:
+    if current_user.role!='admin':
         del form.priority
         del form.status
+        del form.assigned_to
 
     # Pre-fill 'created_by' field
     if request.method == 'GET':
@@ -221,19 +223,25 @@ def edit_ticket(ticket_id):
     ticket = Ticket.query.get_or_404(ticket_id)  # Grab ticket based on ticket_id match
     form = TicketForm(obj=ticket)
 
+
+    if current_user.role!='admin':
+        del form.priority
+        del form.status
+        del form.assigned_to
+
     # Fill form with data from current ticket
     if form.validate_on_submit():
         ticket.dept = form.dept.data
         ticket.title = form.title.data
-        ticket.assigned_to = form.assigned_to.data
-        ticket.status = form.status.data
-        ticket.priority = form.priority.data
+        ticket.status = form.assigned_to.data if form.assigned_to and form.assigned_to.data else 'admin.account'
+        ticket.status = form.status.data if form.status and form.status.data else 'Open'
+        ticket.priority = form.priority.data if form.priority and form.priority.data else 'Low'
         ticket.description = form.description.data
         ticket.location = form.location.data
         ticket.attachment = form.attachment.data
 
         db.session.commit()  # Save any changes
-        return redirect(url_for('tickets'))
+        return redirect(url_for('dashboard'))
 
     return render_template('edit_ticket.html', form=form)
 

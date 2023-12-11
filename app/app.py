@@ -145,7 +145,7 @@ def filter_tickets(username,filter_type):
         ticket_list = Ticket.query.filter_by(assigned_to=username).all()
         return ticket_list
     else:
-        if current_user.role==2:
+        if current_user.role== 'admin':
             ticket_list = Ticket.query.all()
         else:
             ticket_list = Ticket.query.filter_by(dept=current_user.dept).all()
@@ -248,14 +248,13 @@ def edit_user(user_id):
     user = User.query.get_or_404(user_id)
     form = EditUserForm(obj=user)  # Instantiate EditUserForm
 
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         # Update user details
         user.name = form.name.data
         user.username = form.username.data
         user.email = form.email.data
         user.dept = form.dept.data
-        if 'role' in form:  # Check if role field is present in the form
-            user.role = form.role.data
+        user.role = form.role.data if 'role' in request.form else user.role
         db.session.commit()
         flash('User details updated successfully.', 'success')
         return redirect(url_for('users'))
@@ -268,7 +267,7 @@ def edit_user(user_id):
         if 'role' in form:  # Pre-populate role if the field is present
             form.role.data = user.role
 
-    return render_template('edit_user.html', form=form, user_id=user_id)
+    return render_template('edit_user.html', form=form, user=user) 
 
 
 @app.route('/delete_ticket/<int:ticket_id>', methods=['GET','POST'])

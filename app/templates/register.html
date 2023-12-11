@@ -56,16 +56,16 @@
         let dept = document.forms["RegisterForm"]["dept"].value;
     
         // Username validation
-        let usernameFormat = /^[a-zA-Z]+\.[a-zA-Z]+$/;
+        let usernameFormat = /^[a-zA-Z]+\.[a-zA-Z]+[1-9]+$/;
         if (!username.match(usernameFormat)) {
-            alert("Username must be in the format 'firstname.lastname'");
+            alert("Username must be in the format 'firstname.lastname(number 1-9)'");
             return false;
         }
     
         // Email validation
-        let emailFormat = /^[a-zA-Z]+\.[a-zA-Z]+@corn\.com$/;
+        let emailFormat = /^[a-zA-Z]+\.[a-zA-Z]+[1-9]+@corn\.com$/;
         if (!email.match(emailFormat)) {
-            alert("Email must be in the format 'firstname.lastname@corn.com'");
+            alert("Email must be in the format 'firstname.lastname(number 1-9)@corn.com'");
             return false;
         }
     

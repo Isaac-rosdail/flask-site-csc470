@@ -3,7 +3,7 @@
 
 {% block content %}
 <h3>Modify User Details:</h3>
-<form method="post">
+<form method="post" action="{{ url_for('edit_user', user_id=user.id) }}">
     {{ form.hidden_tag() }} <!-- Needed for CSRF token -->
     <p>
         {{form.name.label}} <br>
@@ -28,6 +28,14 @@
     </p>
 
     <p style="color: black;">{{form.submit}}</p>
+
+    {% if form.errors %}
+    <ul class="errors">
+        {% for error in form.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 </form>
 {% endblock %}
 <footer>

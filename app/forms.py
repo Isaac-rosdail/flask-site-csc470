@@ -54,15 +54,15 @@ class EditUserForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     username = StringField('Username', validators=[
         DataRequired(),
-        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+$', message="Username must be in the format 'firstname.lastname'")])
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+[0-9]+$', message="Username must be in the format 'firstname.lastname(a number 1-9)'")])
     email = StringField('Email', validators=[
         DataRequired(),
         Email(message='Invalid email address.'),
-        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+@corn\\.com$', message="Email must be in the format 'firstname.lastname@corn.com'")])
+        Regexp('^[a-zA-Z]+\\.[a-zA-Z]+[0-9]+@corn\\.com$', message="Email must be in the format 'firstname.lastname(a number 1-9)@corn.com'")])
     dept = RadioField('Department', choices=[('HR', 'HR'), ('Marketing', 'Marketing'), ('R&D', 'R&D'), ('Development', 'Development'), ('IT', 'IT')], validators=[DataRequired()])
     
     # Role field is only included if the current user is an admin
-    role = RadioField('Role', choices=[('user', 'User'), ('admin', 'Admin')], validators=[DataRequired()], default='user')
+    role = RadioField('Role', choices=[('user', 'User'), ('admin', 'Admin')], validators=[DataRequired()])
 
     submit = SubmitField('Update')
 

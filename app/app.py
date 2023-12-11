@@ -237,7 +237,7 @@ def edit_ticket(ticket_id):
 
     return render_template('edit_ticket.html', form=form)
 
-@app.route('/_user/<int:user_id>', methods=['GET', 'POST'])
+@app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(user_id):
     # Make sure only admins can access this page

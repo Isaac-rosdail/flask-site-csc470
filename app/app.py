@@ -4,7 +4,12 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_paginate import Pagination
+<<<<<<< HEAD
 from werkzeug.security import generate_password_hash, check_password_hash
+=======
+from werkzeug.security import generate_password_hash,check_password_hash
+import email_validator
+>>>>>>> master
 
 app = Flask(__name__)
 app.secret_key = 'corn'
@@ -192,11 +197,6 @@ def users():
 def submit_ticket():
     form = TicketForm()
 
-    if current_user.role == 0:
-        del form.priority
-        del form.status
-
-    # Pre-fill 'created_by' field
     if request.method == 'GET':
         form.created_by.data = current_user.username
 
@@ -209,7 +209,7 @@ def submit_ticket():
                             priority=getattr(form, 'priority', None) and form.priority.data or 'Low',
                             description=form.description.data,
                             location=form.location.data,
-                            attachment=form.attachment.data)
+                            )
         
         db.session.add(new_ticket)
         db.session.commit()
@@ -221,29 +221,33 @@ def submit_ticket():
 @app.route('/edit_ticket/<int:ticket_id>', methods=['GET', 'POST'])
 @login_required
 def edit_ticket(ticket_id):
-    ticket = Ticket.query.get_or_404(ticket_id)  # Grab ticket based on ticket_id match
+    ticket = Ticket.query.get_or_404(ticket_id)  
     form = TicketForm(obj=ticket)
 
-    # Fill form with data from current ticket
+
+    if current_user.role!='admin':
+        del form.priority
+        del form.status
+        del form.assigned_to
+
+   
     if form.validate_on_submit():
         ticket.dept = form.dept.data
         ticket.title = form.title.data
-        ticket.assigned_to = form.assigned_to.data
-        ticket.status = form.status.data
-        ticket.priority = form.priority.data
+        ticket.status = form.assigned_to.data if form.assigned_to and form.assigned_to.data else 'admin.account'
+        ticket.status = form.status.data if form.status and form.status.data else 'Open'
+        ticket.priority = form.priority.data if form.priority and form.priority.data else 'Low'
         ticket.description = form.description.data
         ticket.location = form.location.data
-        ticket.attachment = form.attachment.data
 
         db.session.commit()  # Save any changes
-        return redirect(url_for('tickets'))
+        return redirect(url_for('dashboard'))
 
     return render_template('edit_ticket.html', form=form)
 
 @app.route('/edit_user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def edit_user(user_id):
-    # Make sure only admins can access this page
     if not current_user.role == 'admin':
         flash('You do not have permission to edit user roles.', 'STOP')
         return redirect(url_for('dashboard'))
@@ -267,7 +271,7 @@ def edit_user(user_id):
         form.username.data = user.username
         form.email.data = user.email
         form.dept.data = user.dept
-        if 'role' in form:  # Pre-populate role if the field is present
+        if 'role' in form:  
             form.role.data = user.role
 
     return render_template('edit_user.html', form=form, user=user) 
@@ -276,7 +280,7 @@ def edit_user(user_id):
 @app.route('/delete_ticket/<int:ticket_id>', methods=['GET','POST'])
 @login_required
 def delete_ticket(ticket_id):
-    ticket = Ticket.query.get_or_404(ticket_id)  # Grab ticket based on ticket_id match
+    ticket = Ticket.query.get_or_404(ticket_id)  
 
     db.session.delete(ticket)
     db.session.commit()  # Save any changes
@@ -287,20 +291,23 @@ def delete_ticket(ticket_id):
 @app.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @login_required
 def delete_user(user_id):
-    user = User.query.get_or_404(user_id)  # Correctly grab user based on user_id match
+    user = User.query.get_or_404(user_id) 
 
     db.session.delete(user)
-    db.session.commit()  # Save any changes
+    db.session.commit()  
+
+    if(user_id==current_user.id):
+        return redirect(url_for('home'))
 
     return redirect(url_for('users'))
 
 
 @app.route('/ticket/<int:ticket_id>')
 def view_ticket(ticket_id):
-    # Retrieve the ticket details from the database based on the ticket_id
+    
     ticket = Ticket.query.get_or_404(ticket_id)
     
-    # For simplicity, assuming there's a 'comments' attribute in the Ticket model
+    
     comments = Comment.query.filter_by(ticket_id=ticket_id).all()
 
     return render_template('ticket_detail.html', ticket=ticket, comments=comments)

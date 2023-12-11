@@ -151,7 +151,7 @@ th{
 
 
 .light-mode {
-    background-color: rgb(161, 161, 161);
+    background-color: #ffffff;
     color: rgb(0, 0, 0);
 
     
@@ -165,7 +165,7 @@ th{
     }
     th {
         background-color: maroon;
-        color: rgb(20, 20, 20);
+        color: white;
     }
 
     tr:nth-child(even) {

@@ -15,44 +15,34 @@
         {{ form.created_by.label }} <br> <!-- Individual Who is requesting service -->
         <div style="color: black;">{{ form.created_by(size=30) }}</div>
     </p>
-    <p>
-        {{ form.dept.label }} <br>
-        <div style="color: black;">{{ form.dept(size=4) }}</div>
-    </p>
+    <fieldset>
+        <legend>{{ form.dept.label }}</legend>
+        {{ form.dept() }}
+    </fieldset>
     <p>
         {{ form.title.label }} <br> <!-- Dept. they're in? -->
         <div style="color: black;">{{ form.title(size=30) }}</div>
     </p>
-    {% if form.assigned_to %}
     <p>
         {{ form.assigned_to.label }} <br> <!-- Who is the ticket assigned to -->
         <div style="color: black;">{{ form.assigned_to(size=30) }}</div>
     </p>
-    {% endif %}
-        {% if form.status %}
-    <p>
-        {{ form.status.label }} <br> <!-- Status of the ticket -->
-        <div style="color: black;">{{ form.status(size=3) }}</div>
-    </p>
-        {% endif %}
-        {% if form.priority %}
-    <p>
-        {{ form.priority.label }} <br> <!-- Priority of the ticket -->
-        <div style="color: black;">{{ form.priority(size=3) }}</div>
-    </p>
-    {% endif %}
+    <fieldset>
+        <legend>{{ form.status.label }}</legend>
+        {{ form.status() }}
+    </fieldset>
+    <fieldset>
+        <legend>{{ form.priority.label }}</legend>
+        {{ form.priority() }}
+    </fieldset>
     <p>
         {{ form.description.label }} <br> <!-- Brief title of issue -->
         <div style="color: black;">{{ form.description(size=30) }}</div>
     </p>
-    <p>
-        {{ form.location.label }} <br> <!-- Where did the issue take place -->
-        <div style="color: black;">{{ form.location(size=3) }}</div>
-    </p>
-    <p>
-        {{ form.attachment.label }} <br> <!-- Attach images or files that pertain to the issue -->
-        <div style="color: black;">{{ form.attachment(size=30) }}
-    </p>
+    <fieldset>
+        <legend>{{ form.location.label }}</legend>
+        {{ form.location() }}
+    </fieldset>
     <p>
         <div style="color: black;">{{ form.submit() }}</div>
     </p>

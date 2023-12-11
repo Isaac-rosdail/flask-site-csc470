@@ -28,26 +28,33 @@ class RegisterForm(FlaskForm):
 
 
 class TicketForm(FlaskForm):
-
     created_by = StringField('Created by', validators=[DataRequired()])
-    dept = SelectField('Department', choices=[
-        ('1', 'HR'),
-        ('2', 'Marketing'),
-        ('3', 'R&D'),
-        ('4', 'Development')
+    dept = RadioField('Department', choices=[
+        ('HR', 'HR'),
+        ('Marketing', 'Marketing'),
+        ('R&D', 'R&D'),
+        ('Development', 'Development')
     ], validators=[DataRequired()])
     title = StringField('Title: ', validators=[DataRequired()])
-    assigned_to = StringField('Assigned To', default='admin')   # Default to admin
-    status = SelectField(choices=[('open', 'Open'), ('in-progress', 'In-Progress'), ('closed', 'Closed')])
-    priority = SelectField(choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')])
+    assigned_to = StringField('Assigned To', default='admin.account')   # Default to admin
+    status = RadioField('Status', choices=[
+        ('open', 'Open'),
+        ('in-progress', 'In-Progress'),
+        ('closed', 'Closed')
+    ], validators=[DataRequired()])
+    priority = RadioField('Priority', choices=[
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High')
+    ], validators=[DataRequired()])
     description = StringField('Description')
-    location = SelectField('Location', choices=[
+    location = RadioField('Location', choices=[
         ('office1', 'Office 1'),
         ('office2', 'Office 2'),
         ('office3', 'Office 3')
-    ])
-    attachment = StringField('Attachment(s)')
+    ], validators=[DataRequired()])
     submit = SubmitField('Submit Ticket')
+
 
 
 class EditUserForm(FlaskForm):

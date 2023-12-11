@@ -283,7 +283,7 @@ def delete_ticket(ticket_id):
 @app.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @login_required
 def delete_user(user_id):
-    user = Ticket.query.get_or_404(user_id)  # Grab user based on user_id match
+    user = User.query.get_or_404(user_id)  # Correctly grab user based on user_id match
 
     db.session.delete(user)
     db.session.commit()  # Save any changes

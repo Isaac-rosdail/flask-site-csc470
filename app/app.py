@@ -283,6 +283,7 @@ def delete_ticket(ticket_id):
 
     return redirect(url_for('tickets'))
 
+
 @app.route('/delete_user/<int:user_id>', methods=['GET','POST'])
 @login_required
 def delete_user(user_id):
@@ -293,6 +294,7 @@ def delete_user(user_id):
 
     return redirect(url_for('users'))
 
+
 @app.route('/ticket/<int:ticket_id>')
 def view_ticket(ticket_id):
     # Retrieve the ticket details from the database based on the ticket_id
@@ -302,6 +304,7 @@ def view_ticket(ticket_id):
     comments = Comment.query.filter_by(ticket_id=ticket_id).all()
 
     return render_template('ticket_detail.html', ticket=ticket, comments=comments)
+
 
 with app.app_context():
     create_default_admin()

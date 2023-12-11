@@ -38,8 +38,8 @@ class TicketForm(FlaskForm):
     ], validators=[DataRequired()])
     title = StringField('Title: ', validators=[DataRequired()])
     assigned_to = StringField('Assigned To', default='admin')   # Default to admin
-    status = SelectField(choices=[('open', 'Open'), ('in-progress', 'In-Progress'), ('closed', 'Closed')])
-    priority = SelectField(choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')])
+    status = SelectField('Status', choices=[('open', 'Open'), ('in_progress', 'In-Progress'), ('closed', 'Closed')])
+    priority = SelectField('Priority', choices=[('low', 'Low'), ('medium', 'Medium'), ('high', 'High')])
     description = StringField('Description')
     location = SelectField('Location', choices=[
         ('office1', 'Office 1'),

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from forms import RegisterForm, LoginForm, TicketForm, EditUserForm  # Import forms from forms.py
+from app.forms import RegisterForm, LoginForm, TicketForm, EditUserForm  # Import forms from forms.py
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy  # Init SQLAlchemy
 from sqlalchemy.exc import IntegrityError
@@ -47,11 +47,13 @@ class Ticket(db.Model):
     location = db.Column(db.String(30))
     attachment = db.Column(db.String(30))
 
+
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ticket_id = db.Column(db.Integer)
     user_id = db.Column(db.Integer)
     content = db.Column(db.String(30))
+
 
 # Init db & tables if needed
 with app.app_context():
@@ -136,16 +138,17 @@ def create_default_admin():
         except IntegrityError:
             db.session.rollback()
 
+# Filter tickets
 def filter_tickets(username,filter_type):
-    if filter_type=='created':
+    if filter_type == 'created':
         ticket_list = Ticket.query.filter_by(created_by=username).all()
-        #print(ticket_list[0].created_by)
+        # print(ticket_list[0].created_by)
         return ticket_list
-    elif filter_type=='assigned':
+    elif filter_type == 'assigned':
         ticket_list = Ticket.query.filter_by(assigned_to=username).all()
         return ticket_list
     else:
-        if current_user.role== 'admin':
+        if current_user.role == 'admin':
             ticket_list = Ticket.query.all()
         else:
             ticket_list = Ticket.query.filter_by(dept=current_user.dept).all()
@@ -189,7 +192,7 @@ def users():
 def submit_ticket():
     form = TicketForm()
 
-    if current_user.role==0:
+    if current_user.role == 0:
         del form.priority
         del form.status
 

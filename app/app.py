@@ -10,7 +10,7 @@ import email_validator
 app = Flask(__name__)
 app.secret_key = 'corn'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Not needed?
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'corn'  # For Flask_WTF form(s)
 db = SQLAlchemy(app)
 
@@ -38,7 +38,7 @@ class User(UserMixin, db.Model):
 
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    created_by = db.Column(db.String(30))  # get dept from finding user based on their user_id?
+    created_by = db.Column(db.String(30))  # get dept from finding user based on their user_id
     assigned_to = db.Column(db.String(30))
     status = db.Column(db.String(30))
     priority = db.Column(db.String(30))
@@ -68,7 +68,7 @@ def get_data():
 def home():
     form = LoginForm()
     logout_user()
-    # Check for user in db, if password matches, redirect to dashboard template
+    # Check for user in db -- if password matches, redirect to dashboard template
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
